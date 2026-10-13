@@ -1,0 +1,1 @@
+Right-click any input or textarea and insert a saved snippet from your own nested folders. No autofill, no tracking.

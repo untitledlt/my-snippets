@@ -39,7 +39,7 @@ export function buildMenuItems(tree) {
       }
     }
   }
-  walk(tree, [], "chrome-filler-root");
+  walk(tree, [], "my-snippets-root");
   return items;
 }
 

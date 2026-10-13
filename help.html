@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>My Snippets — Help</title>
+<style>
+:root{
+  --bg:#ffffff;
+  --surface:#F7F7F8;
+  --surface-hover:#EFEFF1;
+  --border:#E4E4E7;
+  --text:#18181B;
+  --text-secondary:#71717A;
+  --text-tertiary:#A1A1AA;
+  --accent:#4F46E5;
+  --accent-soft:#EEF2FF;
+}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);}
+a{color:var(--accent);}
+a:hover{color:#4338CA;}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:var(--surface);padding:2px 5px;border-radius:5px;}
+.btn{font-size:13px;font-weight:600;padding:9px 16px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;text-decoration:none;}
+.btn:hover{background:var(--surface-hover);}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+.btn.primary:hover{background:#4338CA;}
+section{padding:24px 0;border-top:1px solid var(--border);}
+section:first-of-type{border-top:none;}
+section h2{margin:0 0 4px;font-size:16px;font-weight:700;}
+section > p.lead{margin:0 0 4px;font-size:13px;color:var(--text-secondary);line-height:1.6;}
+.faq-item{padding:14px 0;border-top:1px solid var(--border);}
+.faq-item:first-of-type{border-top:none;}
+.faq-item h3{margin:0 0 4px;font-size:13.5px;font-weight:700;}
+.faq-item p{margin:0;font-size:13px;color:var(--text-secondary);line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div style="max-width:620px;margin:0 auto;padding:48px 24px 64px;">
+
+  <h1 style="margin:0 0 6px;font-size:22px;font-weight:700;letter-spacing:-0.01em;">My Snippets — Help</h1>
+  <p style="margin:0 0 20px;font-size:14px;color:var(--text-secondary);line-height:1.6;">
+    Answers to common questions, plus how to find your settings or report a
+    problem.
+  </p>
+
+  <section>
+    <h2>How to find the Options page</h2>
+    <p class="lead">
+      The Options page is where you add, edit, delete, and reorder your
+      snippet folders and values. There are three ways to open it:
+    </p>
+    <ul style="margin:8px 0 0;padding-left:20px;font-size:13px;color:var(--text-secondary);line-height:1.8;">
+      <li>Right-click any text field, open the <strong>My Snippets</strong> submenu, and pick <strong>Options</strong> below the divider at the bottom.</li>
+      <li>Go to <code>chrome://extensions</code>, find <strong>My Snippets</strong>, and click <strong>Details</strong> → <strong>Extension options</strong>.</li>
+      <li>If you've pinned the extension's icon to your toolbar, right-click it and choose <strong>Options</strong>.</li>
+    </ul>
+    <div style="margin-top:12px;">
+      <button type="button" class="btn primary" id="open-options">Open Options Page</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+
+    <div class="faq-item">
+      <h3>Why don't I see the My Snippets menu when I right-click?</h3>
+      <p>
+        The menu only appears on editable fields — text inputs, textareas,
+        and contenteditable elements. Right-clicking elsewhere on the page
+        (like plain text or an image) won't show it. If it's still missing
+        on a field, try reloading the page so the extension's content
+        script can attach.
+      </p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Can I organize snippets into folders?</h3>
+      <p>
+        Yes. The Options page lets you nest folders as deep as you like,
+        and each folder becomes a submenu in the right-click menu.
+      </p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Is my snippet data synced or sent anywhere?</h3>
+      <p>
+        Snippets are always stored locally in your browser. If your
+        browser's own sync is turned on (signed into Chrome/Edge, or a
+        Brave Sync chain), they're also mirrored through that sync so
+        they follow you to your other devices. The extension itself
+        never sends anything to an external server — the only
+        "network" involved is your browser's own sync, which you
+        control from its settings, not from this extension. See the
+        <a href="https://github.com/untitledlt/my-snippets/blob/main/PRIVACY.md" target="_blank" rel="noopener">privacy policy</a>
+        for details.
+      </p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How do I remove the demo folders?</h3>
+      <p>
+        Open the Options page and delete the demo entries like any other
+        folder or value — they're only there to show how nesting works
+        and aren't required.
+      </p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Why did the order of items in my submenu change unexpectedly?</h3>
+      <p>
+        The right-click menu rebuilds itself whenever you save changes on
+        the Options page, so the order always reflects the current order
+        of folders and values there. Reorder them on the Options page to
+        change how they appear.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Found a bug?</h2>
+    <p class="lead">
+      If something isn't working as expected, please report it on GitHub
+      Issues — include the steps to reproduce it and what you expected to
+      happen instead.
+    </p>
+    <div style="margin-top:12px;">
+      <a class="btn" href="https://github.com/untitledlt/my-snippets/issues/new" target="_blank" rel="noopener">Report a bug on GitHub</a>
+    </div>
+  </section>
+
+</div>
+
+<script type="module" src="help.js"></script>
+</body>
+</html>

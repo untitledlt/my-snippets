@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Packages the extension's shippable files into dist/chrome-filler-<version>.zip
+# Packages the extension's shippable files into dist/my-snippets-<version>.zip
 # for upload to the Chrome Web Store Developer Dashboard.
 set -euo pipefail
 
@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 
 version=$(node -p "require('./manifest.json').version")
 out_dir="dist"
-out_zip="$out_dir/chrome-filler-$version.zip"
+out_zip="$out_dir/my-snippets-$version.zip"
 
 files=(
   manifest.json
@@ -15,6 +15,10 @@ files=(
   content.js
   options.html
   options.js
+  onboarding.html
+  onboarding.js
+  help.html
+  help.js
   storage.js
   tree.js
   icons

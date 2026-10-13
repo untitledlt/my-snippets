@@ -2,6 +2,7 @@
   "manifest_version": 3,
   "name": "My Snippets",
   "version": "1.0.0",
+  "description": "Right-click any input, textarea, or editable field and insert a predefined value from your own nested snippet folders.",
   "permissions": ["contextMenus", "storage"],
   "icons": {
     "16": "icons/icon16.png",

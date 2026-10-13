@@ -11,7 +11,7 @@ function rebuildMenu() {
 async function doRebuildMenu() {
   await chrome.contextMenus.removeAll();
   await chrome.contextMenus.create({
-    id: "chrome-filler-root",
+    id: "my-snippets-root",
     title: "My Snippets",
     contexts: ["editable"],
   });
@@ -36,22 +36,67 @@ async function doRebuildMenu() {
       if (item.type === "folder") await createChildren(item.id);
     }
   }
-  await createChildren("chrome-filler-root");
+  await createChildren("my-snippets-root");
+  // Created after the snippet tree so the divider and its items land below
+  // all snippets (sibling creation order is preserved at this menu depth).
+  await chrome.contextMenus.create({
+    id: "my-snippets-divider",
+    parentId: "my-snippets-root",
+    type: "separator",
+    contexts: ["editable"],
+  });
+  await chrome.contextMenus.create({
+    id: "my-snippets-options",
+    parentId: "my-snippets-root",
+    title: "Options",
+    contexts: ["editable"],
+  });
+  await chrome.contextMenus.create({
+    id: "my-snippets-help",
+    parentId: "my-snippets-root",
+    title: "Help",
+    contexts: ["editable"],
+  });
 }
 
 chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === "install") {
     await setTree(DEMO_TREE);
+    chrome.tabs.create({ url: chrome.runtime.getURL("onboarding.html") });
   }
   await rebuildMenu();
 });
 chrome.runtime.onStartup.addListener(rebuildMenu);
-chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && "valueTree" in changes) rebuildMenu();
+chrome.storage.onChanged.addListener(async (changes, area) => {
+  if (!("valueTree" in changes)) return;
+  if (area === "local") {
+    rebuildMenu();
+  } else if (area === "sync") {
+    // Picks up edits made from another synced browser — but only if sync's
+    // copy is actually newer, so a delayed echo of this device's own write
+    // can't clobber a fresher local edit made in the meantime.
+    const incomingUpdatedAt = changes.valueTreeUpdatedAt?.newValue ?? 0;
+    const { valueTreeUpdatedAt: localUpdatedAt = 0 } = await chrome.storage.local.get("valueTreeUpdatedAt");
+    if (incomingUpdatedAt >= localUpdatedAt) {
+      await chrome.storage.local.set({
+        valueTree: changes.valueTree.newValue,
+        valueTreeUpdatedAt: incomingUpdatedAt,
+      });
+    }
+    rebuildMenu();
+  }
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId === "chrome-filler-root") return;
+  if (info.menuItemId === "my-snippets-root") return;
+  if (info.menuItemId === "my-snippets-options") {
+    chrome.runtime.openOptionsPage();
+    return;
+  }
+  if (info.menuItemId === "my-snippets-help") {
+    chrome.tabs.create({ url: chrome.runtime.getURL("help.html") });
+    return;
+  }
   const valueTree = await getTree();
   const value = getNode(valueTree, idToPathParts(info.menuItemId));
   if (typeof value !== "string") return;

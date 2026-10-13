@@ -44,13 +44,13 @@ test("buildMenuItems flattens an empty tree to no items", () => {
   assert.deepEqual(buildMenuItems({}), []);
 });
 
-test("buildMenuItems nests folders under chrome-filler-root and under their parent", () => {
+test("buildMenuItems nests folders under my-snippets-root and under their parent", () => {
   const tree = { Work: { Email: "me@work.com" } };
   const items = buildMenuItems(tree);
   const workId = pathToId(["Work"]);
   const emailId = pathToId(["Work", "Email"]);
   assert.deepEqual(items, [
-    { id: workId, parentId: "chrome-filler-root", title: "Work", type: "folder" },
+    { id: workId, parentId: "my-snippets-root", title: "Work", type: "folder" },
     { id: emailId, parentId: workId, title: "Email", type: "leaf" },
   ]);
 });

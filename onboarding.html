@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Welcome to My Snippets</title>
+<style>
+:root{
+  --bg:#ffffff;
+  --surface:#F7F7F8;
+  --surface-hover:#EFEFF1;
+  --border:#E4E4E7;
+  --text:#18181B;
+  --text-secondary:#71717A;
+  --text-tertiary:#A1A1AA;
+  --accent:#4F46E5;
+  --accent-soft:#EEF2FF;
+}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);}
+a{color:var(--accent);}
+a:hover{color:#4338CA;}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:var(--surface);padding:2px 5px;border-radius:5px;}
+.btn{font-size:13px;font-weight:600;padding:9px 16px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;}
+.btn:hover{background:var(--surface-hover);}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+.btn.primary:hover{background:#4338CA;}
+.step{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-top:1px solid var(--border);}
+.step:first-of-type{border-top:none;}
+.step-num{flex:0 0 26px;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.step h2{margin:0 0 4px;font-size:14.5px;font-weight:700;}
+.step p{margin:0;font-size:13px;color:var(--text-secondary);line-height:1.55;}
+</style>
+</head>
+<body>
+
+<div style="max-width:620px;margin:0 auto;padding:48px 24px 64px;">
+
+  <h1 style="margin:0 0 6px;font-size:22px;font-weight:700;letter-spacing:-0.01em;">Welcome to My Snippets</h1>
+  <p style="margin:0 0 28px;font-size:14px;color:var(--text-secondary);line-height:1.6;">
+    Right-click any text input, textarea, or editable field and insert a
+    predefined value from a nested menu. We've pre-loaded a few demo
+    folders so you can try it right away — read on to make it yours.
+  </p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div>
+      <h2>Try the demo values</h2>
+      <p>
+        Right-click into any text field on a page and look for the
+        <strong>My Snippets</strong> submenu. Pick a value to see it
+        fill the field.
+      </p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div>
+      <h2>Replace them with your own</h2>
+      <p>
+        Open the Options page to add, edit, delete, and reorder your own
+        folders and values. Delete the demo entries whenever you're
+        ready — they're only there to show how folders can nest.
+      </p>
+      <div style="margin-top:12px;">
+        <button type="button" class="btn primary" id="open-options">Open Options Page</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div>
+      <h2>Finding the Options page later</h2>
+      <p>
+        This welcome tab only opens once, right after install. To get
+        back to your snippets afterward, go to
+        <code>chrome://extensions</code>, find <strong>My Snippets</strong>,
+        and click <strong>Details</strong> → <strong>Extension options</strong>.
+        If you've pinned the extension's icon to your toolbar, right-clicking
+        it also offers an <strong>Options</strong> shortcut.
+      </p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div>
+      <h2>Need help later?</h2>
+      <p>
+        Right-click any text field, open the <strong>My Snippets</strong>
+        submenu, and pick <strong>Help</strong> below the divider at the
+        bottom. It covers finding the Options page, frequently asked
+        questions, and how to report a bug.
+      </p>
+      <div style="margin-top:12px;">
+        <a class="btn" href="help.html">Open Help Page</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script type="module" src="onboarding.js"></script>
+</body>
+</html>

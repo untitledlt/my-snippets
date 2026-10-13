@@ -1,0 +1,33 @@
+My Snippets lets you right-click on any text input, textarea, or
+contenteditable field and insert a predefined value from a nested
+context menu — no autofill, no field matching, just a manual "paste
+this value into the field I right-clicked" tool.
+
+Organize your snippets into folders of any depth — personal info,
+canned support replies, test data, signatures, anything you type
+repeatedly — and reach them from a native right-click submenu that
+mirrors your folder structure.
+
+Features:
+- Native right-click context menu, nested to match your folder
+  structure.
+- Clicking a value replaces the field's contents and fires
+  input/change events, so frameworks (React, Vue, plain JS) pick up
+  the change.
+- An options page to add, edit, delete, and reorder folders and
+  values.
+- Works on any website, since snippets are useful in forms,
+  dashboards, and tools you don't control.
+
+Privacy:
+- All your snippets are stored only in chrome.storage.local, on your
+  own machine, scoped to your browser profile.
+- The extension makes no network requests of any kind — no sync, no
+  analytics, no telemetry.
+- The content script only reads the field you right-click, in order
+  to insert the value you picked; it never reads, logs, or transmits
+  page content, form data, or browsing activity.
+- Uninstalling the extension removes all stored data with it.
+
+Full privacy policy: https://github.com/untitledlt/my-snippets/blob/main/PRIVACY.md
+Source code: https://github.com/untitledlt/my-snippets

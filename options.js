@@ -7,6 +7,7 @@ let editing = null; // { id, field: "label" | "value", draft }
 let confirmDeleteId = null;
 let allExpanded = true;
 let newNodeCounter = 0;
+let saveTimer = null;
 
 const treeRoot = document.getElementById("tree-root");
 const errorBox = document.getElementById("error");
@@ -120,7 +121,15 @@ function render() {
 
     const isEditingLabel = editing?.id === node.id && editing.field === "label";
     if (isEditingLabel) {
-      rowLeft.appendChild(editInput(editing.draft, false, (draft) => commitEdit(draft)));
+      rowLeft.appendChild(
+        editInput(
+          editing.draft,
+          false,
+          (draft) => commitEdit(draft),
+          isFolder ? null : (draft) => commitLabelEditAndFocusValue(node.id, draft),
+          node.label,
+        ),
+      );
     } else {
       const labelButton = document.createElement("button");
       labelButton.type = "button";
@@ -175,6 +184,7 @@ function render() {
           if (entry) entry.list.splice(entry.index, 1);
           confirmDeleteId = null;
           render();
+          scheduleSave();
         }),
       );
       confirmBar.appendChild(
@@ -215,28 +225,39 @@ function render() {
   toggleAllButton.textContent = allExpanded ? "Collapse all" : "Expand all";
 }
 
-function editInput(draft, mono, onCommit) {
+function editInput(draft, mono, onCommit, onTab, placeholder) {
   const input = document.createElement("input");
   input.className = mono ? "edit-input mono" : "edit-input";
   input.value = draft;
   input.style.maxWidth = mono ? "" : "220px";
-  if (mono) input.placeholder = "Value";
-  else input.setAttribute("aria-label", "Rename");
+  input.placeholder = placeholder ?? (mono ? "Value" : "");
+  if (!mono) input.setAttribute("aria-label", "Rename");
   queueMicrotask(() => input.focus());
+  let settled = false;
   input.addEventListener("input", () => {
     editing.draft = input.value;
   });
   input.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
+      settled = true;
       onCommit(input.value);
     } else if (event.key === "Escape") {
       event.preventDefault();
+      settled = true;
       editing = null;
       render();
+    } else if (event.key === "Tab" && !event.shiftKey && onTab) {
+      event.preventDefault();
+      settled = true;
+      onTab(input.value);
     }
   });
-  input.addEventListener("blur", () => onCommit(input.value));
+  input.addEventListener("blur", () => {
+    if (settled) return;
+    settled = true;
+    onCommit(input.value);
+  });
   return input;
 }
 
@@ -259,6 +280,21 @@ function commitEdit(draft) {
   }
   editing = null;
   render();
+  scheduleSave();
+}
+
+function commitLabelEditAndFocusValue(id, draft) {
+  const entry = findEntry(id);
+  if (!entry) {
+    editing = null;
+    render();
+    return;
+  }
+  const value = (draft || "").trim();
+  if (value) entry.node.label = value;
+  editing = { id, field: "value", draft: entry.node.value };
+  render();
+  scheduleSave();
 }
 
 function addChild(parentId, type) {
@@ -278,8 +314,9 @@ function addChild(parentId, type) {
     collapsed.delete(parentId);
   }
   targetList.push(node);
-  editing = { id, field: "label", draft: node.label };
+  editing = { id, field: "label", draft: "" };
   render();
+  scheduleSave();
 }
 
 function move(id, dir) {
@@ -290,6 +327,7 @@ function move(id, dir) {
   const [item] = entry.list.splice(entry.index, 1);
   entry.list.splice(newIndex, 0, item);
   render();
+  scheduleSave();
 }
 
 function toggleAll(expand) {
@@ -315,12 +353,23 @@ async function save() {
     errorBox.textContent = result.error;
     return;
   }
-  await setTree(result.tree);
+  const saveResult = await setTree(result.tree);
+  if (!saveResult.synced && saveResult.error) {
+    errorBox.textContent =
+      "Saved on this device, but it didn't fit in browser sync (100KB limit) — trim some snippets to back them up across devices.";
+  }
   savedIndicator.style.display = "flex";
   clearTimeout(savedTimer);
   savedTimer = setTimeout(() => {
     savedIndicator.style.display = "none";
   }, 2400);
+}
+
+// Autosaves after every edit (debounced so rapid successive changes, like
+// several reorder clicks in a row, collapse into a single write).
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(save, 350);
 }
 
 async function exportSnippets() {
@@ -330,7 +379,7 @@ async function exportSnippets() {
   const date = new Date().toISOString().slice(0, 10);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `chrome-filler-snippets-${date}.json`;
+  link.download = `my-snippets-${date}.json`;
   link.click();
   URL.revokeObjectURL(url);
 }
@@ -373,7 +422,6 @@ async function confirmRestore() {
 
 document.getElementById("add-root-folder").addEventListener("click", () => addChild(null, "folder"));
 document.getElementById("add-root-value").addEventListener("click", () => addChild(null, "leaf"));
-document.getElementById("save").addEventListener("click", save);
 toggleAllButton.addEventListener("click", () => toggleAll(!allExpanded));
 document.getElementById("export-snippets").addEventListener("click", exportSnippets);
 document.getElementById("restore-snippets").addEventListener("click", () => restoreFileInput.click());
@@ -388,5 +436,14 @@ async function load() {
   nodes = treeToNodes(await getTree());
   render();
 }
+
+// Flushes a pending debounced autosave immediately if the page closes
+// before the debounce timer would otherwise fire.
+window.addEventListener("beforeunload", () => {
+  if (saveTimer) {
+    clearTimeout(saveTimer);
+    save();
+  }
+});
 
 load();
