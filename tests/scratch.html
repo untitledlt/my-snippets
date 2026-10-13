@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Chrome Filler scratch test page</title>
+  </head>
+  <body>
+    <h1>Scratch test page</h1>
+    <p>Plain input: <input id="t" /></p>
+    <p>Plain textarea: <textarea id="ta"></textarea></p>
+    <p>Contenteditable: <div id="d" contenteditable="true" style="border:1px solid #333;width:300px;height:60px;">edit me</div></p>
+    <p>Controlled-style input (dispatches input event to a counter):
+      <input id="controlled" />
+      <span id="counter">0 input events</span>
+    </p>
+    <script>
+      let count = 0;
+      document.getElementById("controlled").addEventListener("input", () => {
+        count++;
+        document.getElementById("counter").textContent = count + " input events";
+      });
+    </script>
+  </body>
+</html>

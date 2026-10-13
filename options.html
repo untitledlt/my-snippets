@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>My Snippets Options</title>
+<style>
+:root{
+  --bg:#ffffff;
+  --surface:#F7F7F8;
+  --surface-hover:#EFEFF1;
+  --border:#E4E4E7;
+  --text:#18181B;
+  --text-secondary:#71717A;
+  --text-tertiary:#A1A1AA;
+  --accent:#4F46E5;
+  --accent-soft:#EEF2FF;
+  --folder:#CA8A04;
+  --leaf:#0D9488;
+  --danger:#DC2626;
+  --danger-soft:#FEF2F2;
+}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);}
+a{color:var(--accent);}
+a:hover{color:#4338CA;}
+.tree-row{transition:background-color .1s ease;position:relative;display:flex;align-items:center;padding:0 16px;}
+.tree-row:hover{background:var(--surface-hover);}
+.tree-row:hover .row-actions{opacity:1;pointer-events:auto;}
+.row-actions{opacity:0;pointer-events:none;transition:opacity .12s ease;display:flex;align-items:center;gap:2px;flex:0 0 auto;}
+.chevron-btn{width:22px;height:22px;flex:0 0 22px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:var(--text-tertiary);cursor:pointer;border-radius:6px;transition:transform .15s ease;}
+.chevron-btn:hover{background:var(--border);}
+.chevron-btn.open{transform:rotate(90deg);}
+.leaf-spacer{width:22px;flex:0 0 22px;display:inline-block;}
+.label-btn{background:none;border:none;padding:3px 6px;margin:-3px -6px;border-radius:6px;font-size:13.5px;color:var(--text);cursor:text;text-align:left;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px;font-family:inherit;}
+.label-btn:hover{background:var(--accent-soft);color:var(--accent);}
+.value-btn{background:none;border:none;padding:3px 6px;margin:-3px -6px;border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--text-secondary);cursor:text;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px;text-align:left;}
+.value-btn:hover{background:var(--surface-hover);color:var(--text);}
+.edit-input{font-size:13.5px;padding:3px 7px;border:1.5px solid var(--accent);border-radius:6px;outline:none;font-family:inherit;width:100%;box-sizing:border-box;background:#fff;color:var(--text);}
+.edit-input.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;text-align:left;width:160px;flex:0 0 auto;}
+.icon-btn{width:24px;height:24px;flex:0 0 24px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:var(--text-tertiary);border-radius:6px;cursor:pointer;}
+.icon-btn:hover{background:var(--border);color:var(--text);}
+.icon-btn.danger:hover{background:var(--danger-soft);color:var(--danger);}
+.confirm-bar{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--danger);background:var(--danger-soft);padding:3px 8px;border-radius:8px;flex:0 0 auto;white-space:nowrap;}
+.btn{font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;}
+.btn:hover{background:var(--surface-hover);}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+.btn.primary:hover{background:#4338CA;}
+.btn.ghost{background:none;border-color:var(--border);color:var(--text-secondary);}
+.btn.ghost:hover{background:var(--surface-hover);color:var(--text);}
+.row-left{display:flex;align-items:center;gap:6px;flex:1 1 auto;min-width:0;padding:6px 0;}
+.row-right{display:flex;align-items:center;gap:4px;margin-left:auto;flex:0 0 auto;padding-left:10px;}
+.value-sep{color:var(--text-tertiary);flex:0 0 auto;}
+.inline-add{opacity:.7;}
+.inline-add:hover{opacity:1;}
+.row-even{background:#fff;}
+.row-odd{background:var(--surface);}
+.tree-row.row-even:hover{background:var(--surface-hover);}
+.tree-row.row-odd:hover{background:var(--surface-hover);}
+#error{color:var(--danger);font-size:12px;padding:0 20px;white-space:pre-wrap;}
+</style>
+</head>
+<body>
+
+<div style="width:100%;min-height:100vh;background:var(--bg);display:flex;flex-direction:column;box-sizing:border-box;">
+
+  <header style="display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:1px solid var(--border);gap:16px;flex-wrap:wrap;">
+    <div style="display:flex;flex-direction:column;gap:1px;">
+      <h1 style="margin:0;font-size:15px;font-weight:700;letter-spacing:-0.01em;">My Snippets</h1>
+      <span style="font-size:12px;color:var(--text-secondary);">Values for the right-click insert menu — order here is menu order</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span id="saved-indicator" style="font-size:12px;color:#16A34A;display:none;align-items:center;gap:4px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        Saved
+      </span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button type="button" class="btn ghost" id="toggle-all"></button>
+        <button type="button" class="btn primary" id="save">Save changes</button>
+      </div>
+    </div>
+  </header>
+
+  <main style="flex:1 1 auto;overflow:auto;padding:16px 20px 32px;display:flex;justify-content:center;">
+    <div style="width:100%;max-width:720px;display:flex;flex-direction:column;gap:10px;">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <span id="total-count" style="font-size:12px;color:var(--text-secondary);"></span>
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn ghost" id="add-root-folder">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"></path><line x1="12" y1="11" x2="12" y2="15"></line><line x1="10" y1="13" x2="14" y2="13"></line></svg>
+            Folder
+          </button>
+          <button type="button" class="btn ghost" id="add-root-value">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="12" x2="12" y2="18"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+            Value
+          </button>
+          <span style="width:1px;align-self:stretch;background:var(--border);"></span>
+          <button type="button" class="btn ghost" id="export-snippets">Export</button>
+          <button type="button" class="btn ghost" id="restore-snippets">Restore</button>
+          <input type="file" id="restore-file-input" accept="application/json,.json" style="display:none;" />
+        </div>
+      </div>
+
+      <div id="restore-confirm" style="display:none;align-items:center;gap:10px;font-size:12px;color:var(--danger);background:var(--danger-soft);padding:8px 12px;border-radius:8px;">
+        <span style="flex:1 1 auto;">Restoring will overwrite all current snippets. This cannot be undone. Continue?</span>
+        <button type="button" class="btn danger" id="restore-confirm-yes" style="border-color:var(--danger);color:var(--danger);background:#fff;">Restore</button>
+        <button type="button" class="btn ghost" id="restore-confirm-cancel">Cancel</button>
+      </div>
+
+      <div id="tree-root"></div>
+
+      <div id="error"></div>
+
+      <span style="font-size:12px;color:var(--text-tertiary);">Click a name or value to edit it in place. Reorder with the arrows — order here becomes the right-click menu order.</span>
+
+    </div>
+  </main>
+</div>
+
+<script type="module" src="options.js"></script>
+</body>
+</html>
