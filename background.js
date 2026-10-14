@@ -1,6 +1,54 @@
 import { buildMenuItems, getNode, idToPathParts, DEMO_TREE } from "./tree.js";
 import { getTree, setTree } from "./storage.js";
 
+// chrome.scripting serializes this and runs it inside the page, so it can't
+// close over anything from background.js. Uses the focused field instead of
+// content.js's tracked lastEditableTarget, since right-clicking a field
+// focuses it.
+function fillActiveElement(value) {
+  let el = document.activeElement;
+  while (el && el.shadowRoot && el.shadowRoot.activeElement) {
+    el = el.shadowRoot.activeElement;
+  }
+  if (!el) return;
+
+  if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+    const proto =
+      el.tagName === "TEXTAREA" ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+    Object.getOwnPropertyDescriptor(proto, "value").set.call(el, value);
+    el.dispatchEvent(new Event("input", { bubbles: true }));
+    el.dispatchEvent(new Event("change", { bubbles: true }));
+    return;
+  }
+
+  if (el.isContentEditable) {
+    el.focus();
+    // document.getSelection() can't see into a shadow root — the selection
+    // for an editable element inside one lives on its own root instead.
+    const root = el.getRootNode();
+    const selection = root.getSelection ? root.getSelection() : window.getSelection();
+    if (selection.rangeCount === 0) {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      selection.addRange(range);
+    }
+    const inserted = document.execCommand && document.execCommand("insertText", false, value);
+    if (!inserted) {
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+      const textNode = document.createTextNode(value);
+      range.insertNode(textNode);
+      range.setStartAfter(textNode);
+      range.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      el.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertText", data: value }));
+    }
+    el.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+}
+
 let rebuildQueue = Promise.resolve();
 
 function rebuildMenu() {
@@ -100,9 +148,13 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   const valueTree = await getTree();
   const value = getNode(valueTree, idToPathParts(info.menuItemId));
   if (typeof value !== "string") return;
-  chrome.tabs
-    .sendMessage(tab.id, { type: "FILL_VALUE", value }, { frameId: info.frameId })
+  chrome.scripting
+    .executeScript({
+      target: { tabId: tab.id, frameIds: [info.frameId ?? 0] },
+      func: fillActiveElement,
+      args: [value],
+    })
     .catch(() => {
-      // No content script listening (e.g. tab predates install/reload) — nothing to fill.
+      // Page isn't scriptable (chrome:// pages, the Web Store) — nothing to fill.
     });
 });

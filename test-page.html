@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>My Snippets — test page</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; line-height: 1.5; }
+  section { border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+  h2 { margin-top: 0; font-size: 16px; }
+  input, textarea { width: 100%; box-sizing: border-box; padding: 8px; font-size: 14px; margin-bottom: 8px; }
+  textarea { height: 100px; }
+  .editable {
+    border: 1px solid #999;
+    border-radius: 4px;
+    padding: 8px;
+    min-height: 60px;
+    background: #fff;
+  }
+  .shadow-host { border: 1px dashed #c80; padding: 8px; }
+  pre { background: #f5f5f5; padding: 8px; font-size: 12px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+  <h1>My Snippets — test page</h1>
+  <p>Right-click any field below, pick a snippet, and check whether it lands where expected.</p>
+
+  <section>
+    <h2>1. Plain &lt;input&gt;</h2>
+    <input type="text" placeholder="Click here, then right-click" />
+  </section>
+
+  <section>
+    <h2>2. &lt;textarea&gt;</h2>
+    <textarea placeholder="Place caret in the middle of existing text, then right-click">Some text before CURSOR_HERE and some text after.</textarea>
+  </section>
+
+  <section>
+    <h2>3. Simple contentEditable div</h2>
+    <p>Click in the middle of the sentence below (between "middle" and "text"), then right-click to insert a snippet mid-sentence.</p>
+    <div class="editable" contenteditable="true">
+      This is the beginning, this is the middle of the text, and this is the end.
+    </div>
+  </section>
+
+  <section>
+    <h2>4. contentEditable with nested formatting (Gmail/Notion-style)</h2>
+    <div class="editable" contenteditable="true">
+      <p>Paragraph one with <b>bold</b> and <i>italic</i> text.</p>
+      <p>Paragraph two — right-click <span style="background: yellow;">right in this highlighted span</span> to test caret restoration inside nested nodes.</p>
+      <ul>
+        <li>List item one</li>
+        <li>List item two — click here</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>5. contentEditable inside an open shadow root</h2>
+    <div id="shadow-host" class="shadow-host"></div>
+    <script>
+      const host = document.getElementById("shadow-host");
+      const root = host.attachShadow({ mode: "open" });
+      root.innerHTML = `
+        <style>
+          .inner { border: 1px solid #999; border-radius: 4px; padding: 8px; min-height: 40px; background: #fff; }
+        </style>
+        <p style="margin:0 0 6px;font-size:13px;color:#666;">Shadow DOM (open mode) contentEditable:</p>
+        <div class="inner" contenteditable="true">Editable text inside an open shadow root — click in the middle, then right-click.</div>
+      `;
+    </script>
+  </section>
+
+  <section>
+    <h2>6. Multiple fields — focus check</h2>
+    <p>Right-click field A, then (before picking a snippet) click into field B to simulate focus moving while the menu-building happens. Snippet should fill the field you right-clicked, not the one you clicked after.</p>
+    <input type="text" placeholder="Field A" />
+    <input type="text" placeholder="Field B" />
+  </section>
+
+  <section>
+    <h2>Notes</h2>
+    <pre>- Fields 3-5 are where the caret-restoration regression (if any) would show: insertion landing at the END of the editable block instead of at the exact right-click point.
+- Field 1-2 test the native setValue path (React-style tracker bypass isn't exercised here since this is plain HTML, but the insertion point for inputs/textareas is always correct since fill replaces full value or uses native setter).
+- Field 5 tests the shadowRoot.activeElement walk added in fillActiveElement.
+- Field 6 tests whether activeElement-at-click-time can drift from the originally right-clicked element.</pre>
+  </section>
+</body>
+</html>
