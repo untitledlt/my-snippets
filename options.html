@@ -56,6 +56,8 @@ a:hover{color:#4338CA;}
 .tree-row.row-even:hover{background:var(--surface-hover);}
 .tree-row.row-odd:hover{background:var(--surface-hover);}
 #error{color:var(--danger);font-size:12px;padding:0 20px;white-space:pre-wrap;}
+.warning-banner{display:flex;align-items:flex-start;gap:8px;background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;font-size:12.5px;line-height:1.5;padding:10px 12px;border-radius:8px;}
+.warning-banner svg{flex:0 0 auto;margin-top:1px;}
 </style>
 </head>
 <body>
@@ -80,6 +82,11 @@ a:hover{color:#4338CA;}
 
   <main style="flex:1 1 auto;overflow:auto;padding:16px 20px 32px;display:flex;justify-content:center;">
     <div style="width:100%;max-width:720px;display:flex;flex-direction:column;gap:10px;">
+
+      <div class="warning-banner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <span>Don't store passwords or other sensitive information here. These values are mirrored to your browser's own sync (e.g. your Google account) when it's enabled, so they leave this device along with the rest of your synced browser data.</span>
+      </div>
 
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
         <span id="total-count" style="font-size:12px;color:var(--text-secondary);"></span>
