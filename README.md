@@ -1,6 +1,7 @@
 # My Snippets
 
-A personal Chrome extension that lets you right-click on an `<input>`,
+A personal browser extension (Chrome, Brave, Edge, and other
+Chromium-based browsers) that lets you right-click on an `<input>`,
 `<textarea>`, or `contenteditable` field and pick a predefined value from
 a nested context menu. No autofill, no field matching — purely a manual
 "paste this value into the field I right-clicked" tool. Values are
@@ -27,14 +28,14 @@ for the full design.
 
 ## Installing (unpacked, for development)
 
-1. Open `chrome://extensions`.
+1. Open your browser's extensions page: `chrome://extensions` (Chrome,
+   Brave), `edge://extensions` (Edge).
 2. Enable **Developer mode** (top right).
 3. Click **Load unpacked** and select this repository's root directory.
 4. A welcome tab opens automatically on first install, with demo values
    to try and a button to open the Options page. Afterward, reach the
-   Options page via "Details" → "Extension options" on
-   `chrome://extensions`, or by right-clicking the toolbar icon →
-   "Options".
+   Options page via "Details" → "Extension options" on your browser's
+   extensions page, or by right-clicking the toolbar icon → "Options".
 
 ## Usage
 
@@ -51,9 +52,9 @@ for the full design.
 ```
 
 Produces `dist/my-snippets-<version>.zip`, containing exactly the
-files Chrome needs to load the extension (manifest, scripts, options
-page, icons) — suitable for upload to the Chrome Web Store Developer
-Dashboard. The version is read from `manifest.json`.
+files the browser needs to load the extension (manifest, scripts,
+options page, icons) — suitable for upload to the Chrome Web Store
+Developer Dashboard. The version is read from `manifest.json`.
 
 ## Running tests
 
