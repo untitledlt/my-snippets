@@ -11,19 +11,32 @@ mirrors your folder structure.
 Features:
 - Native right-click context menu, nested to match your folder
   structure.
-- Clicking a value replaces the field's contents and fires
-  input/change events, so frameworks (React, Vue, plain JS) pick up
-  the change.
+- Clicking a value fills the field: it replaces the contents of an
+  input/textarea, or inserts at the caret position in a
+  contenteditable field. Either way it fires input/change events, so
+  frameworks (React, Vue, plain JS) pick up the change.
 - An options page to add, edit, delete, and reorder folders and
-  values.
+  values, plus export or restore your whole snippet tree as a JSON
+  file whenever you want a manual backup.
 - Works on any website, since snippets are useful in forms,
   dashboards, and tools you don't control.
+- Never lose your snippets: they're backed up automatically through
+  your browser's own built-in sync (the same system that syncs your
+  bookmarks), so they follow you to every device signed into your
+  browser profile — encrypted in transit by the browser, with no
+  account or server of ours involved.
 
 Privacy:
-- All your snippets are stored only in chrome.storage.local, on your
-  own machine, scoped to your browser profile.
-- The extension makes no network requests of any kind — no sync, no
-  analytics, no telemetry.
+- Your snippets are stored on your own machine, scoped to your
+  browser profile. If your browser's sync is turned on, they're also
+  mirrored through your browser vendor's own encrypted sync (Chrome,
+  Edge, Brave, etc.) — the same mechanism that already syncs your
+  bookmarks and passwords. If sync is off, everything simply stays on
+  the device.
+- The extension itself makes no network requests of any kind — no
+  servers, no analytics, no telemetry. The only "network" involved is
+  your browser's own sync, which you already control from its
+  settings.
 - The content script only reads the field you right-click, in order
   to insert the value you picked; it never reads, logs, or transmits
   page content, form data, or browsing activity.

@@ -1,0 +1,29 @@
+Create a 1280×800 marketing screenshot for the Chrome extension "My Snippets",
+for the Chrome Web Store listing (this is a stylized promotional image, not
+a literal screenshot — one plain UI screenshot will be submitted separately).
+
+Base image: attached screenshot of the browser's right-click context menu
+with "My Snippets" visible.
+
+Composition:
+- Zoom and crop so the "My Snippets" submenu and its nested folder items
+  (all levels) are the clear focal point, large and fully legible.
+- Background: replace the current form with a plain, uncluttered mock
+  input field or form on a light, neutral background (white or very light
+  gray) — one or two fields max, no distracting content.
+
+
+Text overlay
+- One short headline, large and bold: "Right-click. Insert. Done."
+- One short subheadline, smaller: "Your snippets, synced across devices."
+- Do not add more than these two lines of text on the image. Everything
+  else below is background context for tone, not text to render.
+
+Background context (for tone only, not to be rendered as text):
+My Snippets lets you right-click any <input>, <textarea>, or contenteditable
+field and insert a saved snippet from a nested context menu — no autofill,
+no field matching, just a manual "paste this value here" tool. Snippets are
+organized into folders of any depth. They're stored locally on your device,
+and optionally mirrored through your browser's own built-in sync (Chrome,
+Edge, Brave, etc.) if you already have that enabled — no extra account, no
+server of ours involved. The extension is free and open source.
